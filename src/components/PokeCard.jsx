@@ -12,7 +12,21 @@ export default function PokeCard(props) {
     const [loading, setLoading] = useState(false)
 
     // destructuring info from data
-    const {name, height, abilities, stats, types, moves, sprites} = data || {}    
+    const {name, height, abilities, stats, types, moves, sprites} = data || {}  
+    
+    // I am using the filter method to filter out when sprites return an undefined or if the value has a keyname with the selected keywords
+    // if neither of the two cases is true we return true
+    const imgList = Object.keys(sprites || {}).filter(val => {
+        // undefined checker
+        if (!sprites[val]) {
+            return false
+        }
+        // keyword checker
+        if (['versions', 'other'].includes(val)) {
+            return false
+        }
+        return true
+    })
 
     // We invoke useEffect; takes in two inputs:
     // First Input: A callback Function to be executed whenever the event we are listening for is triggered
@@ -99,6 +113,39 @@ export default function PokeCard(props) {
                 {types.map((typeObj, typeIndex) => {
                     return (
                         <TypeCard key={typeIndex} type={typeObj?.type?.name} />
+                    )
+                })}
+            </div>
+            <img className='default-img' src={'/pokemon/' + getFullPokedexNumber(selectedPokemon) + '.png'} alt={`${name}-large-img`}/>
+            <div className='img-container'>
+                {imgList.map((spriteUrl, spriteIndex) => {
+                    const imgUrl = sprites[spriteUrl]
+                    return (
+                        <img key={spriteIndex} src={imgUrl} alt={`${name}-img-${spriteUrl}`} />
+                    )
+                })}
+            </div>
+            <h3>Stats</h3>
+            <div className='stats-card'>
+                {stats.map((statsObj, statIndex) => {
+                    const {stat, base_stat} = statsObj
+
+                    return (
+                        <div key={statIndex} className='stat-item'>
+                            <p>{stat?.name.replaceAll('-', ' ')}</p>
+                            <h4>{base_stat}</h4>
+                        </div>
+                    )
+                })}
+            </div>
+
+            <h3>Moves</h3>
+            <div className='pokemon-move-grid'>
+                {moves.map((moveObj, moveIndex) => {
+                    return (
+                        <button className='button-card pokemon-move' key={moveIndex} onClick={() => {}}>
+                            <p>{moveObj?.move?.name.replaceAll('-', ' ')}</p>
+                        </button>
                     )
                 })}
             </div>
