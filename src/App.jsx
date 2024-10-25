@@ -1,5 +1,5 @@
 import Header from "./components/Header"
-import PokeCard from "./components/Pokecard"
+import PokeCard from "./components/PokeCard"
 import SideNav from "./components/SideNav"
 
 import { useState } from "react"
@@ -7,13 +7,29 @@ import { useState } from "react"
 function App() {
   // Default value shown is always going to be Bulbasaur
   const [selectedPokemon, setSelectedPokemon] = useState(0)
+  const [showSideMenu, setShowSideMenu] = useState(false)
 
+  function handleToggleMenu() {
+    setShowSideMenu(!showSideMenu)
+  }
 
   return (
     <>
-      <Header />
-      <SideNav selectedPokemon={selectedPokemon} setSelectedPokemon={setSelectedPokemon}/>
-      <PokeCard selectedPokemon={selectedPokemon} />
+      <Header 
+        handleToggleMenu={handleToggleMenu} 
+      />
+
+      <SideNav 
+        selectedPokemon={selectedPokemon} 
+        setSelectedPokemon={setSelectedPokemon}
+        handleToggleMenu={handleToggleMenu}
+        showSideMenu={showSideMenu}
+      />
+
+      <PokeCard 
+        selectedPokemon={selectedPokemon} 
+      />
+      
     </>
   )
 }

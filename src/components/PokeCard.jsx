@@ -12,6 +12,7 @@ export default function PokeCard(props) {
     const [data, setData] = useState(null)
     const [loading, setLoading] = useState(false)
     const [skill, setSkill] = useState(null)
+    const [loadingSkill, setLoadingSkill] = useState(false)
 
     // destructuring info from data
     const {name, height, abilities, stats, types, moves, sprites} = data || {}  
@@ -29,6 +30,54 @@ export default function PokeCard(props) {
         }
         return true
     })
+
+    async function fetchMoveData(move, moveURL) {
+        // basic clauses to make sure that the fetching data doesn't break
+        if (loadingSkill || !localStorage || !moveURL) { return }
+
+        // now checking cache for move
+        let cache = {} 
+        // if we have an existing move from within the local storage, the cache is updated
+        if (localStorage.getItem('pokemon-moves')) {
+            cache = JSON.parse(localStorage.getItem('pokemon-moves'))
+        }
+
+        // check if move is currently within the cache
+        if (move in cache) {
+            setSkill(cache[move])
+            console.log('Found move in cache')
+        }
+
+        // fetching data from API if none of the statements passed
+        try {
+            setLoadingSkill(true)
+            const result = await fetch(moveURL)
+            const moveData = await result.json()
+            console.log('Fetched move from API', moveData)
+            // Filtering out moves that do not have the correct version type name parameters
+            // Reasoning, this project needs Gen 1 pokedex info
+            const description = moveData?.flavor_text_entries.filter(val => {
+                return val.version_group.name = 'firered-leafgreen'
+            })[0]?.flavor_text
+
+            const skillData = {
+                name: move,
+                description
+            }
+            // will rerender the screen with the new information
+            // modal will open when new data is assigned
+            setSkill(skillData)
+            
+            // adding data to the cache and saving it for next time
+            cache[move] = skillData
+            localStorage.setItem('pokemon-moves', JSON.stringify(cache))
+
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoadingSkill(false)
+        }
+    }
 
     // We invoke useEffect; takes in two inputs:
     // First Input: A callback Function to be executed whenever the event we are listening for is triggered
@@ -57,6 +106,7 @@ export default function PokeCard(props) {
         if (selectedPokemon in cache) {
             // reading from cache
             setData(cache[selectedPokemon])
+            console.log('Found pokemon in cache')
             return
         }
             // 3. If we do fetch from the API, than we have to make sure to save the data into the cache for next time
@@ -77,7 +127,7 @@ export default function PokeCard(props) {
                 // assigning the pokemon data to the state, so the screen can update to match
                 setData(pokemonData)
 
-                console.log(pokemonData)
+                console.log('Fetched Pokemon Data')
 
                 // also add the NEW pokemon data to the cache
                 cache[selectedPokemon] = pokemonData
@@ -113,11 +163,11 @@ export default function PokeCard(props) {
                 <Modal handleCloseModal={() => { setSkill(null) }}>
                     <div>
                         <h6>Name</h6>
-                        <h2>namefiheoufh</h2>
+                        <h2 className='skill-name'>{skill.name.replaceAll('-', ' ')}</h2>
                     </div>
                     <div>
                         <h6>Description</h6>
-                        <p>descriptioneoifhewuofh</p>
+                        <p>{skill.description}</p>
                     </div>
                 </Modal>  
             )}
@@ -160,7 +210,7 @@ export default function PokeCard(props) {
             <div className='pokemon-move-grid'>
                 {moves.map((moveObj, moveIndex) => {
                     return (
-                        <button className='button-card pokemon-move' key={moveIndex} onClick={() => {}}>
+                        <button className='button-card pokemon-move' key={moveIndex} onClick={() => { fetchMoveData(moveObj?.move?.name, moveObj?.move?.url) }}>
                             <p>{moveObj?.move?.name.replaceAll('-', ' ')}</p>
                         </button>
                     )
