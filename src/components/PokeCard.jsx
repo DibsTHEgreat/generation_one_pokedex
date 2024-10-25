@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react"
 import { getFullPokedexNumber, getPokedexNumber } from "../utils"
 import TypeCard from "./TypeCard"
+import Modal from "./Modal"
 
 export default function PokeCard(props) {
     // Destructure the selected props
@@ -10,6 +11,7 @@ export default function PokeCard(props) {
     // By setting the default value null, it makes it very clear when we do and do not have pokemon available
     const [data, setData] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [skill, setSkill] = useState(null)
 
     // destructuring info from data
     const {name, height, abilities, stats, types, moves, sprites} = data || {}  
@@ -105,6 +107,21 @@ export default function PokeCard(props) {
 
     return (
         <div className='poke-card'>
+            {/* Conditional Rendering */}
+            {/* If skill is true, than render the modal, if false, than do not render the modal */}
+            { skill && (
+                <Modal handleCloseModal={() => { setSkill(null) }}>
+                    <div>
+                        <h6>Name</h6>
+                        <h2>namefiheoufh</h2>
+                    </div>
+                    <div>
+                        <h6>Description</h6>
+                        <p>descriptioneoifhewuofh</p>
+                    </div>
+                </Modal>  
+            )}
+
             <div>
                 <h4>#{getFullPokedexNumber(selectedPokemon)}</h4>
                 <h2>{name}</h2>

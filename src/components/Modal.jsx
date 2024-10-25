@@ -1,7 +1,8 @@
 // Pop-up Overlay 
 import ReactDom from 'react-dom'
 
-export default function Modal() {
+export default function Modal(props) {
+    const { children, handleCloseModal } = props
     // Create portal takes in two inputs: the JSX to be rendered, and the id of the div where stuff will be rendered
     // Rendering the modal content that doesn't get injected into the original div with an Id of root
     return ReactDom.createPortal(
