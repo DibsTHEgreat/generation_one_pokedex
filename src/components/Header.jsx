@@ -10,10 +10,10 @@ export default function Header(props) {
     <header>
         {/* When calling or invoking a function, it is only possible from within an arrow function () => {} */}
         {/* For this situation, we are only passing in the function as reference, as in, refer to this function when you go to invoke it*/}
-        <button  onClick={handleToggleMenu} className='open-nav-button'>
-          <i class="fa-solid fa-bars"></i>
+        <button onClick={handleToggleMenu} className='open-nav-button'>
+          <i className="fa-solid fa-bars"></i>
         </button>
-        <h1 className="text-gradient">
+        <h1 className='text-gradient'>
           Pokédex
         </h1>
     </header>

@@ -5,7 +5,7 @@ import { first151Pokemon, getFullPokedexNumber } from "../utils"
 
 export default function SideNav(props) {
 
-    const { selectedPokemon, setSelectedPokemon, handleToggleMenu, showSideMenu} = props
+    const { selectedPokemon, setSelectedPokemon, handleCloseMenu, showSideMenu} = props
 
     const [searchValue, setSearchValue] = useState('')
 
@@ -30,8 +30,8 @@ export default function SideNav(props) {
     return (
         <nav className={'' + (!showSideMenu ? "open" : '')}>
             <div className={"header " + (!showSideMenu ? "open" : '')}>
-                <button onClick={handleToggleMenu} className='open-nav-button'>
-                    <i class="fa-solid fa-arrow-left-long"></i>
+                <button onClick={handleCloseMenu} className='open-nav-button'>
+                    <i className="fa-solid fa-arrow-left-long"></i>
                 </button>
                 <h1 className="text-gradient">Pokédex</h1>
             </div>
@@ -41,7 +41,10 @@ export default function SideNav(props) {
             {filteredPokemon.map((pokemon, pokemonIndex) => {
                 const truePokeDexNumber = first151Pokemon.indexOf(pokemon)
                 return (
-                    <button onClick={() => {setSelectedPokemon(truePokeDexNumber)}} key={pokemonIndex} className={'nav-card ' + (pokemonIndex === selectedPokemon ? ' nav-card-selected' : ' ')}>
+                    <button onClick={() => {
+                        setSelectedPokemon(truePokeDexNumber)
+                        handleCloseMenu()
+                    }} key={pokemonIndex} className={'nav-card ' + (pokemonIndex === selectedPokemon ? ' nav-card-selected' : ' ')}>
                         <p>{getFullPokedexNumber(truePokeDexNumber)}</p>
                         <p>{pokemon}</p>
                     </button>
