@@ -16,3 +16,4 @@ A modern, responsive web application that serves as a comprehensive Pokédex for
 
 ## Acknowledgments
 - [PokéAPI](https://pokeapi.co) - For providing the Pokémon data.
+- [Smoljames](https://github.com/jamezmca/fantacss) - For providing fanta CSS foundation
