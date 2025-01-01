@@ -6,6 +6,7 @@ import { useState } from "react"
 
 function App() {
   // Default value shown is always going to be Bulbasaur
+  // Testing if new stuff works?
   const [selectedPokemon, setSelectedPokemon] = useState(0)
   const [showSideMenu, setShowSideMenu] = useState(true)
 
